@@ -9,7 +9,6 @@ interface Props {
   tolerance: number;
   question: string;
   onDone: () => void;
-  onChangeAnswer?: (delta: number) => void;
 }
 
 const PILL_WIDTH = 180;
@@ -19,7 +18,6 @@ export default function BonusScreen({
   answer,
   question,
   onDone,
-  onChangeAnswer,
 }: Props) {
   const [revealed, setRevealed] = useState(false);
   const [animDone, setAnimDone] = useState(false);
@@ -51,16 +49,6 @@ export default function BonusScreen({
           });
         } else if (animDone) {
           onDone();
-        }
-      }
-      if (!revealed && onChangeAnswer) {
-        if (e.code === "ArrowRight") {
-          e.preventDefault();
-          onChangeAnswer(5);
-        }
-        if (e.code === "ArrowLeft") {
-          e.preventDefault();
-          onChangeAnswer(-5);
         }
       }
     }

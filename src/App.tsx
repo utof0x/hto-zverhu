@@ -9,6 +9,7 @@ import RoundEndScreen from './components/RoundEndScreen'
 import AnimatedBackground from './components/AnimatedBackground'
 import { CHALLENGES } from './data/challenges'
 import { BONUS_QUESTIONS_MEN, BONUS_QUESTIONS_WOMEN, pickQuestion } from './data/bonusQuestions'
+// BONUS_QUESTIONS_WOMEN kept for women bonus question selection
 import './App.css'
 
 const TOTAL_ROUNDS = CHALLENGE_ORDER.length
@@ -82,13 +83,6 @@ export default function App() {
     setState((prev) => ({ ...prev, phase: 'round-end' }))
   }, [])
 
-  const handleChangeAnswer = useCallback((delta: number) => {
-    setState((prev) => ({
-      ...prev,
-      bonusAnswer: Math.max(1, Math.min(99, prev.bonusAnswer + delta)),
-    }))
-  }, [])
-
   // Points can be added on challenge, bonus, and round-end screens
   useEffect(() => {
     if (state.phase !== 'bonus') return
@@ -111,17 +105,6 @@ export default function App() {
       if (state.phase === 'challenge' || state.phase === 'round-end') {
         if (e.key === '1') addPoint('men')
         if (e.key === '2') addPoint('women')
-      }
-      // Dev shortcut: jump to bonus screen
-      if (e.key === 'b' || e.key === 'B') {
-        const { question } = pickQuestion(BONUS_QUESTIONS_MEN, [])
-        setState((prev) => ({
-          ...prev,
-          phase: 'bonus',
-          bonusTeam: 'men',
-          bonusAnswer: Math.round(15 + Math.random() * 70),
-          bonusQuestion: question.question,
-        }))
       }
     }
     window.addEventListener('keydown', onKey)
@@ -147,7 +130,6 @@ export default function App() {
           tolerance={state.bonusAnswerTolerance}
           question={state.bonusQuestion}
           onDone={handleBonusDone}
-          onChangeAnswer={handleChangeAnswer}
         />
       )}
       {state.phase === 'round-end' && (
