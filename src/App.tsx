@@ -73,8 +73,8 @@ export default function App() {
   const addPoint = useCallback((team: Team) => {
     setState((prev) => ({
       ...prev,
-      scores: { ...prev.scores, [team]: prev.scores[team] + 1 },
-      roundScores: { ...prev.roundScores, [team]: prev.roundScores[team] + 1 },
+      scores: { ...prev.scores, [team]: prev.scores[team] + 10 },
+      roundScores: { ...prev.roundScores, [team]: prev.roundScores[team] + 10 },
     }))
   }, [])
 
