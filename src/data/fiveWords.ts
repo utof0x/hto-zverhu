@@ -1,4 +1,4 @@
-const base = import.meta.env.BASE_URL
+const base = import.meta.env.BASE_URL;
 
 export interface FiveWordsRound {
   women: { words: [string, string, string, string, string]; song: string };
@@ -8,7 +8,7 @@ export interface FiveWordsRound {
 export const FIVE_WORDS_ROUNDS: FiveWordsRound[] = [
   {
     women: {
-      words: ["Хто", "тримає", "цей", "район", "пес"],
+      words: ["Хто", "не", "ходить", "на", "газон"],
       song: `${base}audio/fv-w-1.mp3`,
     },
     men: {
@@ -36,4 +36,4 @@ export const FIVE_WORDS_ROUNDS: FiveWordsRound[] = [
       song: `${base}audio/fv-m-3.mp3`,
     },
   },
-]
+];
