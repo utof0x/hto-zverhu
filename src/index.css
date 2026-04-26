@@ -454,14 +454,17 @@ body,
   align-items: center;
   gap: 10px;
   height: 120px;
+  background: #0aafd4;
+  padding: 24px 40px;
+  border-radius: var(--radius);
 }
 
 .sound-wave-bar {
   width: 18px;
   border-radius: 9px;
-  background: #0aafd4;
+  background: var(--white);
   animation: wave-bounce 0.9s ease-in-out infinite alternate;
-  height: calc(var(--bar-height) * 100px);
+  height: calc(var(--bar-height) * 72px);
 }
 
 @keyframes wave-bounce {
