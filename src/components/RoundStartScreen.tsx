@@ -13,7 +13,7 @@ const blockVariants = {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { delay, duration: 0.6, type: 'spring', bounce: 0.4 },
+    transition: { delay, duration: 0.6, type: 'spring' as const, bounce: 0.4 },
   }),
 }
 

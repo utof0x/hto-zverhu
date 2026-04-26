@@ -34,7 +34,7 @@ export default function App() {
 
   const advance = useCallback(() => {
     setState((prev) => {
-      const { phase, currentRound, scores } = prev
+      const { phase, currentRound } = prev
 
       if (phase === 'home') return { ...prev, phase: 'round-start' }
 
