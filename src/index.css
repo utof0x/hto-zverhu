@@ -46,53 +46,11 @@ body,
 }
 
 /* ── Animated background ───────────────────────────── */
-.animated-bg {
+.animated-bg-canvas {
   position: absolute;
   inset: 0;
-  overflow: hidden;
   pointer-events: none;
   z-index: 0;
-  display: grid;
-  gap: 20px;
-  align-content: start;
-  padding: 4px;
-}
-
-.bg-circle {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-duration: 4s;
-  will-change: background-color;
-}
-
-@keyframes blueSwap {
-  0%,
-  100% {
-    background-color: #00e5ff;
-  }
-  50% {
-    background-color: #ff0099;
-  }
-}
-@keyframes pinkSwap {
-  0%,
-  100% {
-    background-color: #ff0099;
-  }
-  50% {
-    background-color: #00e5ff;
-  }
-}
-
-.bg-circle.starts-blue {
-  animation-name: blueSwap;
-}
-.bg-circle.starts-pink {
-  animation-name: pinkSwap;
 }
 
 /* ── Round start screen ────────────────────────────── */
