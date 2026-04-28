@@ -13,14 +13,6 @@ export default function HomeScreen() {
           Хто зверху?
         </motion.div>
       </div>
-      <motion.p
-        className="keyboard-hint"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
-        transition={{ delay: 1, duration: 0.8 }}
-      >
-        Натисніть Space щоб розпочати
-      </motion.p>
     </div>
   )
 }

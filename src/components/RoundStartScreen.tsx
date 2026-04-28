@@ -17,10 +17,6 @@ const blockVariants = {
   }),
 }
 
-const hint = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 0.5, transition: { delay: 1.4, duration: 0.8 } },
-}
 
 export default function RoundStartScreen({ round, challengeName }: Props) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -66,9 +62,6 @@ export default function RoundStartScreen({ round, challengeName }: Props) {
           {challengeName}
         </motion.div>
       </div>
-      <motion.p className="keyboard-hint" variants={hint} initial="hidden" animate="visible">
-        Натисніть Space або Enter щоб розпочати
-      </motion.p>
     </div>
   )
 }

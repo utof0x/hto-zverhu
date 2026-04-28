@@ -90,15 +90,6 @@ export default function GuessSongChallenge({ onAdvance }: Props) {
         </AnimatePresence>
       </div>
 
-      <p className="keyboard-hint">
-        {step === 'idle-minus'
-          ? 'Натисніть Space щоб увімкнути мінус'
-          : step === 'minus'
-            ? 'Натисніть Space щоб зупинити'
-            : step === 'idle-plus'
-              ? 'Натисніть Space щоб увімкнути плюс'
-              : 'Натисніть Space щоб зупинити'}
-      </p>
     </div>
   )
 }

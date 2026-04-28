@@ -120,17 +120,6 @@ export default function WhoAmIChallenge({ onAdvance }: Props) {
         </div>
       )}
 
-      <p className="keyboard-hint">
-        {step === 'intro'
-          ? 'Натисніть Space щоб показати зображення'
-          : step === 'men'
-            ? 'Натисніть Space щоб завершити хід'
-            : step === 'idle'
-              ? 'Натисніть Space для команди жінок'
-              : step === 'women'
-                ? 'Натисніть Space щоб завершити хід'
-                : 'Натисніть Space щоб продовжити'}
-      </p>
     </div>
   )
 }

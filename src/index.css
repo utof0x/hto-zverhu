@@ -53,6 +53,40 @@ body,
   z-index: 0;
 }
 
+/* ── Password screen ───────────────────────────────── */
+.password-box {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.password-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(255 255 255 / 0.4);
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.password-dot-filled {
+  background: #0aafd4;
+  border-color: #0aafd4;
+}
+
+@keyframes password-shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-12px); }
+  40%       { transform: translateX(12px); }
+  60%       { transform: translateX(-8px); }
+  80%       { transform: translateX(8px); }
+}
+
+.password-shake {
+  animation: password-shake 0.5s ease;
+}
+
 /* ── Round start screen ────────────────────────────── */
 .round-start-center {
   position: relative;

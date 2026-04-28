@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import wrongSrc from '../assets/wrong.mp3'
 
 const TIMER_SECONDS = 90
+const songSrc = `${import.meta.env.BASE_URL}audio/word-assembly-song.mp3`
 
 type Step = 'women' | 'idle' | 'men' | 'idle2'
 
@@ -15,21 +16,41 @@ export default function WordAssemblyChallenge({ onAdvance }: Props) {
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
   const [timerActive, setTimerActive] = useState(true)
   const [timerDone, setTimerDone] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const isTimerStep = step === 'women' || step === 'men'
 
+  function stopAudio() {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      audioRef.current = null
+    }
+  }
+
+  // Reset timer and start song when entering a timer step
   useEffect(() => {
     if (!isTimerStep) return
     setRemaining(TIMER_SECONDS)
     setTimerDone(false)
     setTimerActive(true)
+
+    stopAudio()
+    const audio = new Audio(songSrc)
+    audio.loop = true
+    audioRef.current = audio
+    audio.play().catch(() => {})
+
+    return () => stopAudio()
   }, [step]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Countdown tick
   useEffect(() => {
     if (!timerActive || timerDone) return
     if (remaining <= 0) {
       setTimerActive(false)
       setTimerDone(true)
+      stopAudio()
       new Audio(wrongSrc).play().catch(() => {})
       return
     }
@@ -44,11 +65,13 @@ export default function WordAssemblyChallenge({ onAdvance }: Props) {
       e.stopImmediatePropagation()
       if (step === 'women') {
         setTimerActive(false)
+        stopAudio()
         setStep('idle')
       } else if (step === 'idle') {
         setStep('men')
       } else if (step === 'men') {
         setTimerActive(false)
+        stopAudio()
         setStep('idle2')
       } else {
         onAdvance()
@@ -59,11 +82,7 @@ export default function WordAssemblyChallenge({ onAdvance }: Props) {
   }, [step, onAdvance])
 
   if (!isTimerStep) {
-    return (
-      <div className="screen">
-        <p className="keyboard-hint">Натисніть Space щоб продовжити</p>
-      </div>
-    )
+    return <div className="screen" />
   }
 
   const teamClass = step === 'women' ? 'bonus-women' : 'bonus-men'
@@ -79,7 +98,6 @@ export default function WordAssemblyChallenge({ onAdvance }: Props) {
       >
         {remaining}
       </motion.div>
-      <p className="keyboard-hint">Натисніть Space щоб завершити хід</p>
     </div>
   )
 }
