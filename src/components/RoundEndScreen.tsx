@@ -1,23 +1,29 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import type { Team } from '../types'
+import { motion, AnimatePresence } from "framer-motion";
+import type { Team } from "../types";
 
 interface Props {
-  scores: { men: number; women: number }
-  isGameEnd: boolean
-  onAddPoint: (team: Team) => void
+  scores: { men: number; women: number };
+  isGameEnd: boolean;
+  onAddPoint: (team: Team) => void;
 }
 
 const cardVariants = {
   hidden: { opacity: 0, y: 60, scale: 0.85 },
   visible: (delay: number) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { delay, duration: 0.6, type: 'spring' as const, bounce: 0.35 },
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { delay, duration: 0.6, type: "spring" as const, bounce: 0.35 },
   }),
-}
+};
 
-export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props) {
-  const menLeads = scores.men > scores.women
-  const tied = scores.men === scores.women
+export default function RoundEndScreen({
+  scores,
+  isGameEnd,
+  onAddPoint,
+}: Props) {
+  const menLeads = scores.men > scores.women;
+  const tied = scores.men === scores.women;
 
   return (
     <div className="screen">
@@ -28,7 +34,7 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {isGameEnd ? 'Гра завершена!' : 'Рахунок'}
+          {isGameEnd ? "Гра завершена!" : "Рахунок"}
         </motion.h1>
 
         <div className="score-cards">
@@ -38,7 +44,7 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
             custom={0.1}
             initial="hidden"
             animate="visible"
-            onClick={() => onAddPoint('men')}
+            onClick={() => onAddPoint("men")}
           >
             <div className="score-card-label">Чоловіки</div>
             <AnimatePresence mode="popLayout">
@@ -47,7 +53,7 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
                 className="score-card-value"
                 initial={{ scale: 1.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', bounce: 0.5, duration: 0.35 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.35 }}
               >
                 {scores.men}
               </motion.div>
@@ -60,7 +66,7 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
             custom={0.3}
             initial="hidden"
             animate="visible"
-            onClick={() => onAddPoint('women')}
+            onClick={() => onAddPoint("women")}
           >
             <div className="score-card-label">Жінки</div>
             <AnimatePresence mode="popLayout">
@@ -69,7 +75,7 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
                 className="score-card-value"
                 initial={{ scale: 1.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', bounce: 0.5, duration: 0.35 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.35 }}
               >
                 {scores.women}
               </motion.div>
@@ -79,12 +85,12 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
 
         {isGameEnd && !tied && (
           <motion.div
-            className={`winner-banner ${menLeads ? 'winner-men' : 'winner-women'}`}
+            className={`winner-banner ${menLeads ? "winner-men" : "winner-women"}`}
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8, type: 'spring', bounce: 0.5 }}
+            transition={{ delay: 0.8, type: "spring", bounce: 0.5 }}
           >
-            {menLeads ? '🏆 Перемогли чоловіки!' : '🏆 Перемогли жінки!'}
+            {menLeads ? "🏆 Перемогли чоловіки!" : "🏆 Перемогли жінки!"}
           </motion.div>
         )}
         {isGameEnd && tied && (
@@ -98,15 +104,6 @@ export default function RoundEndScreen({ scores, isGameEnd, onAddPoint }: Props)
           </motion.div>
         )}
       </div>
-
-      <div className="challenge-hints">
-        <span className="hint-key">1</span><span className="hint-text">+1 Чоловіки</span>
-        <span className="hint-sep" />
-        <span className="hint-key">2</span><span className="hint-text">+1 Жінки</span>
-        <span className="hint-sep" />
-        <span className="hint-key">Space</span>
-        <span className="hint-text">{isGameEnd ? 'Зіграти знову' : 'Далі'}</span>
-      </div>
     </div>
-  )
+  );
 }

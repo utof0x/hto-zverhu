@@ -7,6 +7,7 @@ import FiveWordsChallenge from './FiveWordsChallenge'
 import RoleSwapChallenge from './RoleSwapChallenge'
 import WordAssemblyChallenge from './WordAssemblyChallenge'
 import GuessSongChallenge from './GuessSongChallenge'
+import FinalChallenge from './FinalChallenge'
 
 interface Props {
   challengeType: ChallengeType
@@ -32,6 +33,10 @@ export default function ChallengeScreen({ challengeType, onAdvance }: Props) {
 
   if (challengeType === 'guess-song') {
     return <GuessSongChallenge onAdvance={onAdvance} />
+  }
+
+  if (challengeType === 'final') {
+    return <FinalChallenge onAdvance={onAdvance} />
   }
 
   return <GenericChallenge challengeType={challengeType} onAdvance={onAdvance} />

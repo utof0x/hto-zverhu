@@ -19,9 +19,12 @@ export default function AnimatedBackground() {
     let animId: number
     let lastTime = 0
 
+    const c = canvas
+    const x = ctx
+
     function resize() {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      c.width = window.innerWidth
+      c.height = window.innerHeight
     }
     resize()
     window.addEventListener('resize', resize)
@@ -32,9 +35,9 @@ export default function AnimatedBackground() {
       if (time - lastTime < 32) return
       lastTime = time
 
-      const w = canvas.width
-      const h = canvas.height
-      ctx.clearRect(0, 0, w, h)
+      const w = c.width
+      const h = c.height
+      x.clearRect(0, 0, w, h)
 
       const cols = Math.ceil(w / CELL) + 1
       const rows = Math.ceil(h / CELL) + 1
@@ -52,10 +55,10 @@ export default function AnimatedBackground() {
           const g = (fg + (tg - fg) * t) | 0
           const b = (fb + (tb - fb) * t) | 0
 
-          ctx.fillStyle = `rgba(${r},${g},${b},0.7)`
-          ctx.beginPath()
-          ctx.arc(col * CELL + RADIUS + 4, row * CELL + RADIUS + 4, RADIUS, 0, Math.PI * 2)
-          ctx.fill()
+          x.fillStyle = `rgba(${r},${g},${b},0.7)`
+          x.beginPath()
+          x.arc(col * CELL + RADIUS + 4, row * CELL + RADIUS + 4, RADIUS, 0, Math.PI * 2)
+          x.fill()
         }
       }
     }

@@ -44,6 +44,9 @@ export default function App() {
       if (phase === 'round-start') return { ...prev, phase: 'challenge' }
 
       if (phase === 'challenge') {
+        if (prev.currentChallenge === 'final') {
+          return { ...prev, phase: 'round-end', roundScores: { men: 0, women: 0 } }
+        }
         const bonusTeam: Team = prev.roundScores.women > prev.roundScores.men ? 'women' : 'men'
         const questions = bonusTeam === 'men' ? BONUS_QUESTIONS_MEN : BONUS_QUESTIONS_WOMEN
         const { question } = pickQuestion(questions, [])

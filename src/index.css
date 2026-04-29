@@ -67,7 +67,9 @@ body,
   border-radius: 50%;
   border: 3px solid rgba(255 255 255 / 0.4);
   background: transparent;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .password-dot-filled {
@@ -76,11 +78,22 @@ body,
 }
 
 @keyframes password-shake {
-  0%, 100% { transform: translateX(0); }
-  20%       { transform: translateX(-12px); }
-  40%       { transform: translateX(12px); }
-  60%       { transform: translateX(-8px); }
-  80%       { transform: translateX(8px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-12px);
+  }
+  40% {
+    transform: translateX(12px);
+  }
+  60% {
+    transform: translateX(-8px);
+  }
+  80% {
+    transform: translateX(8px);
+  }
 }
 
 .password-shake {
@@ -213,37 +226,6 @@ body,
   padding: 24px 56px;
 }
 
-/* ── Keyboard hints (challenge) ───────────────────── */
-.challenge-hints {
-  position: absolute;
-  bottom: 24px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: rgba(255 255 255 / 0.55);
-  font-size: 14px;
-}
-
-.hint-key {
-  background: rgba(255 255 255 / 0.15);
-  border: 1px solid rgba(255 255 255 / 0.3);
-  border-radius: 6px;
-  padding: 2px 8px;
-  font-family: monospace;
-  font-size: 13px;
-  color: var(--white);
-}
-
-.hint-sep {
-  width: 1px;
-  height: 14px;
-  background: rgba(255 255 255 / 0.2);
-}
-.hint-text {
-  color: rgba(255 255 255 / 0.55);
-}
-
 /* ── Who Am I challenge ────────────────────────────── */
 .who-am-i-image {
   position: absolute;
@@ -331,8 +313,14 @@ body,
   overflow: hidden;
 }
 
-.bonus-track.bonus-men   { background: #2090bb; border-color: #1a6e8e; }
-.bonus-track.bonus-women { background: #bf1e6a; border-color: #8c1550; }
+.bonus-track.bonus-men {
+  background: #2090bb;
+  border-color: #1a6e8e;
+}
+.bonus-track.bonus-women {
+  background: #bf1e6a;
+  border-color: #8c1550;
+}
 
 .bonus-pill {
   position: absolute;
@@ -354,8 +342,12 @@ body,
   line-height: 1;
 }
 
-.bonus-track.bonus-men   .bonus-pill-text { color: #2090bb; }
-.bonus-track.bonus-women .bonus-pill-text { color: #bf1e6a; }
+.bonus-track.bonus-men .bonus-pill-text {
+  color: #2090bb;
+}
+.bonus-track.bonus-women .bonus-pill-text {
+  color: #bf1e6a;
+}
 
 /* ── Round end screen ──────────────────────────────── */
 .round-end-center {
@@ -392,8 +384,12 @@ body,
   width: 320px;
 }
 
-.score-card-men   { background: #0aafd4; }
-.score-card-women { background: #e0257d; }
+.score-card-men {
+  background: #0aafd4;
+}
+.score-card-women {
+  background: #e0257d;
+}
 
 .score-card-label {
   font-size: clamp(20px, 2.5vw, 28px);
@@ -419,9 +415,15 @@ body,
   color: var(--white);
 }
 
-.winner-men   { background: #0aafd4; }
-.winner-women { background: #e0257d; }
-.winner-tie   { background: rgba(255 255 255 / 0.2); }
+.winner-men {
+  background: #0aafd4;
+}
+.winner-women {
+  background: #e0257d;
+}
+.winner-tie {
+  background: rgba(255 255 255 / 0.2);
+}
 
 /* ── Guess Song challenge ──────────────────────────── */
 .guess-song-center {
@@ -460,8 +462,12 @@ body,
 }
 
 @keyframes wave-bounce {
-  from { transform: scaleY(0.25); }
-  to   { transform: scaleY(1); }
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
 }
 
 .guess-song-info {
@@ -537,11 +543,86 @@ body,
   box-shadow: 0 6px 20px rgba(0 0 0 / 0.3);
 }
 
-.word-block.bonus-men   { background: #2090bb; }
-.word-block.bonus-women { background: #bf1e6a; }
+.word-block.bonus-men {
+  background: #2090bb;
+}
+.word-block.bonus-women {
+  background: #bf1e6a;
+}
 
 .word-block-revealed {
   cursor: default;
+}
+
+/* ── Final challenge ───────────────────────────────── */
+.final-timer-wrap {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 2;
+}
+
+.final-timer-wrap .timer-counter {
+  font-size: clamp(28px, 3vw, 44px);
+  padding: 8px 20px;
+  width: auto;
+  min-width: 80px;
+}
+
+.final-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 10px;
+  padding: 56px 12px 12px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.final-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 0;
+  max-height: calc((100vh - 78px) / 2);
+  overflow: hidden;
+}
+
+.final-cell-image {
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  max-height: calc((100vh - 78px) / 2 - 49px);
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.final-cell-answer {
+  flex-shrink: 0;
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  color: var(--white);
+  font-size: clamp(12px, 1.2vw, 18px);
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.final-cell-answer.bonus-men {
+  background: #2090bb;
+}
+.final-cell-answer.bonus-women {
+  background: #bf1e6a;
 }
 
 /* ── Global keyboard hint (bottom) ────────────────── */
