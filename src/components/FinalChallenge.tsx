@@ -11,9 +11,10 @@ type Step = 'men' | 'idle' | 'women' | 'blank'
 
 interface Props {
   onAdvance: () => void
+  onBack: () => void
 }
 
-export default function FinalChallenge({ onAdvance }: Props) {
+export default function FinalChallenge({ onAdvance, onBack }: Props) {
   const [step, setStep] = useState<Step>('men')
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
   const [timerActive, setTimerActive] = useState(true)
@@ -66,26 +67,44 @@ export default function FinalChallenge({ onAdvance }: Props) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code !== 'Space' && e.code !== 'Enter') return
+      const isForward = e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight'
+      const isBack = e.code === 'ArrowLeft'
+      if (!isForward && !isBack) return
       e.preventDefault()
       e.stopImmediatePropagation()
-      if (step === 'men') {
-        setTimerActive(false)
-        stopAudio()
-        setStep('idle')
-      } else if (step === 'idle') {
-        setStep('women')
-      } else if (step === 'women') {
-        setTimerActive(false)
-        stopAudio()
-        setStep('blank')
+
+      if (isForward) {
+        if (step === 'men') {
+          setTimerActive(false)
+          stopAudio()
+          setStep('idle')
+        } else if (step === 'idle') {
+          setStep('women')
+        } else if (step === 'women') {
+          setTimerActive(false)
+          stopAudio()
+          setStep('blank')
+        } else {
+          onAdvance()
+        }
       } else {
-        onAdvance()
+        if (step === 'men') {
+          onBack()
+        } else if (step === 'idle') {
+          setStep('men')
+        } else if (step === 'women') {
+          setTimerActive(false)
+          stopAudio()
+          setStep('idle')
+        } else {
+          // blank → women (timer+audio restart via useEffect)
+          setStep('women')
+        }
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [step, onAdvance])
+  }, [step, onAdvance, onBack])
 
   function handleReveal(i: number) {
     if (revealed[i]) return

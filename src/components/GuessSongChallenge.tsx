@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GUESS_SONG_TRACKS } from '../data/guessSong'
 
-type Step = 'idle-minus' | 'minus' | 'idle-plus' | 'plus'
+type Step = 'idle-minus' | 'minus' | 'idle-plus' | 'plus' | 'idle-end'
 
 interface Props {
   onAdvance: () => void
+  onBack: () => void
 }
 
-export default function GuessSongChallenge({ onAdvance }: Props) {
+export default function GuessSongChallenge({ onAdvance, onBack }: Props) {
   const [songIndex, setSongIndex] = useState(0)
   const [step, setStep] = useState<Step>('idle-minus')
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -29,39 +30,64 @@ export default function GuessSongChallenge({ onAdvance }: Props) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code !== 'Space' && e.code !== 'Enter') return
+      const isForward = e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight'
+      const isBack = e.code === 'ArrowLeft'
+      if (!isForward && !isBack) return
       e.preventDefault()
       e.stopImmediatePropagation()
 
-      if (step === 'idle-minus') {
-        const audio = new Audio(track.minus)
-        audioRef.current = audio
-        audio.play().catch(() => {})
-        setStep('minus')
-      } else if (step === 'minus') {
-        stopAudio()
-        setStep('idle-plus')
-      } else if (step === 'idle-plus') {
-        const audio = new Audio(track.plus)
-        audioRef.current = audio
-        audio.play().catch(() => {})
-        setStep('plus')
-      } else if (step === 'plus') {
-        stopAudio()
-        if (isLast) {
+      if (isForward) {
+        if (step === 'idle-minus') {
+          const audio = new Audio(track.minus)
+          audioRef.current = audio
+          audio.play().catch(() => {})
+          setStep('minus')
+        } else if (step === 'minus') {
+          stopAudio()
+          setStep('idle-plus')
+        } else if (step === 'idle-plus') {
+          const audio = new Audio(track.plus)
+          audioRef.current = audio
+          audio.play().catch(() => {})
+          setStep('plus')
+        } else if (step === 'plus') {
+          stopAudio()
+          if (isLast) {
+            setStep('idle-end')
+          } else {
+            setSongIndex((i) => i + 1)
+            setStep('idle-minus')
+          }
+        } else if (step === 'idle-end') {
           onAdvance()
-        } else {
-          setSongIndex((i) => i + 1)
+        }
+      } else {
+        if (step === 'idle-minus' && songIndex === 0) {
+          onBack()
+        } else if (step === 'idle-minus') {
+          setSongIndex((i) => i - 1)
+          setStep('idle-plus')
+        } else if (step === 'minus') {
+          stopAudio()
           setStep('idle-minus')
+        } else if (step === 'idle-plus') {
+          setStep('idle-minus')
+        } else if (step === 'idle-end') {
+          setStep('idle-plus')
+        } else {
+          // plus → idle-plus
+          stopAudio()
+          setStep('idle-plus')
         }
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [step, track, isLast, onAdvance])
+  }, [step, songIndex, track, isLast, onAdvance, onBack])
 
   return (
     <div className="screen">
+      <div className="challenge-counter">{songIndex + 1} / {GUESS_SONG_TRACKS.length}</div>
       <div className="guess-song-center">
         <AnimatePresence mode="wait">
           {isPlaying && (

@@ -47,7 +47,7 @@ export const GUESS_SONG_TRACKS: GuessSongTrack[] = [
   {
     minus: `${base}audio/gs-7-minus.mp3`,
     plus: `${base}audio/gs-7-plus.mp3`,
-    name: "Зірочка палай (повна версія) - скачати",
+    name: "Зірочка палай",
     artist: "Аня Трінчер",
   },
   {

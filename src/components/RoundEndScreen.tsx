@@ -46,7 +46,7 @@ export default function RoundEndScreen({
             animate="visible"
             onClick={() => onAddPoint("men")}
           >
-            <div className="score-card-label">Чоловіки</div>
+            <div className="score-card-label">Хлопці</div>
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={scores.men}
@@ -68,7 +68,7 @@ export default function RoundEndScreen({
             animate="visible"
             onClick={() => onAddPoint("women")}
           >
-            <div className="score-card-label">Жінки</div>
+            <div className="score-card-label">Дівчата</div>
             <AnimatePresence mode="popLayout">
               <motion.div
                 key={scores.women}
@@ -90,7 +90,7 @@ export default function RoundEndScreen({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8, type: "spring", bounce: 0.5 }}
           >
-            {menLeads ? "🏆 Перемогли чоловіки!" : "🏆 Перемогли жінки!"}
+            {menLeads ? "🏆 Перемогли хлопці!" : "🏆 Перемогли дівчата!"}
           </motion.div>
         )}
         {isGameEnd && tied && (

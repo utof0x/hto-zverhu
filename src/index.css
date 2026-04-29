@@ -379,9 +379,10 @@ body,
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  padding: 52px 0;
+  padding: 28px 0 48px;
   border-radius: var(--radius);
-  width: 320px;
+  width: 420px;
+  min-height: 360px;
 }
 
 .score-card-men {
@@ -392,7 +393,7 @@ body,
 }
 
 .score-card-label {
-  font-size: clamp(20px, 2.5vw, 28px);
+  font-size: clamp(28px, 3.5vw, 40px);
   font-weight: 700;
   color: rgba(255 255 255 / 0.9);
   letter-spacing: 1px;
@@ -400,6 +401,7 @@ body,
 }
 
 .score-card-value {
+  margin-top: 2rem;
   font-size: clamp(80px, 14vw, 160px);
   font-weight: 900;
   color: var(--white);
@@ -446,19 +448,19 @@ body,
 .sound-wave {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 120px;
+  gap: 13px;
+  height: 156px;
   background: #0aafd4;
-  padding: 24px 40px;
+  padding: 31px 52px;
   border-radius: var(--radius);
 }
 
 .sound-wave-bar {
-  width: 18px;
-  border-radius: 9px;
+  width: 23px;
+  border-radius: 12px;
   background: var(--white);
   animation: wave-bounce 0.9s ease-in-out infinite alternate;
-  height: calc(var(--bar-height) * 72px);
+  height: calc(var(--bar-height) * 94px);
 }
 
 @keyframes wave-bounce {
@@ -479,33 +481,33 @@ body,
 }
 
 .guess-song-name {
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(56px, 7.8vw, 100px);
   font-weight: 900;
   color: var(--white);
   background: #0aafd4;
   border-radius: var(--radius);
-  padding: 20px 56px;
+  padding: 31px 88px;
   line-height: 1.2;
 }
 
 .guess-song-artist {
-  font-size: clamp(22px, 3vw, 36px);
+  font-size: clamp(35px, 4.7vw, 56px);
   font-weight: 700;
   color: #0f0f1a;
   background: #d9d9d9;
   border-radius: var(--radius);
-  padding: 14px 48px;
+  padding: 22px 74px;
 }
 
 /* ── Role Swap challenge ───────────────────────────── */
 .role-swap-timer {
-  font-size: clamp(160px, 30vw, 320px);
+  font-size: clamp(184px, 34.5vw, 368px);
   font-weight: 900;
   color: var(--white);
   line-height: 1;
-  padding: 40px 80px;
+  padding: 46px 92px;
   border-radius: var(--radius);
-  min-width: 420px;
+  width: 800px;
   text-align: center;
   font-variant-numeric: tabular-nums;
   position: relative;
@@ -529,11 +531,11 @@ body,
 }
 
 .word-block {
-  width: 480px;
-  height: 160px;
+  width: 510px;
+  height: 170px;
   border-radius: var(--radius);
   color: var(--white);
-  font-size: clamp(36px, 4vw, 56px);
+  font-size: clamp(41px, 4.6vw, 64px);
   font-weight: 900;
   border: none;
   cursor: pointer;
@@ -623,6 +625,32 @@ body,
 }
 .final-cell-answer.bonus-women {
   background: #bf1e6a;
+}
+
+/* ── Challenge counter (top-right) ────────────────── */
+.challenge-counter {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 2;
+  font-size: 20px;
+  font-weight: 800;
+  color: rgba(255 255 255 / 0.75);
+  background: rgba(0 0 0 / 0.35);
+  backdrop-filter: blur(8px);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+.challenge-counter-men {
+  background: rgba(0, 229, 255, 0.3);
+  color: #fff;
+}
+.challenge-counter-women {
+  background: rgba(255, 0, 153, 0.3);
+  color: #fff;
 }
 
 /* ── Global keyboard hint (bottom) ────────────────── */

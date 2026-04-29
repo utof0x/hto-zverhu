@@ -9,9 +9,10 @@ type Step = 'women' | 'idle' | 'men' | 'idle2'
 
 interface Props {
   onAdvance: () => void
+  onBack: () => void
 }
 
-export default function WordAssemblyChallenge({ onAdvance }: Props) {
+export default function WordAssemblyChallenge({ onAdvance, onBack }: Props) {
   const [step, setStep] = useState<Step>('women')
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
   const [timerActive, setTimerActive] = useState(true)
@@ -60,26 +61,44 @@ export default function WordAssemblyChallenge({ onAdvance }: Props) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code !== 'Space' && e.code !== 'Enter') return
+      const isForward = e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight'
+      const isBack = e.code === 'ArrowLeft'
+      if (!isForward && !isBack) return
       e.preventDefault()
       e.stopImmediatePropagation()
-      if (step === 'women') {
-        setTimerActive(false)
-        stopAudio()
-        setStep('idle')
-      } else if (step === 'idle') {
-        setStep('men')
-      } else if (step === 'men') {
-        setTimerActive(false)
-        stopAudio()
-        setStep('idle2')
+
+      if (isForward) {
+        if (step === 'women') {
+          setTimerActive(false)
+          stopAudio()
+          setStep('idle')
+        } else if (step === 'idle') {
+          setStep('men')
+        } else if (step === 'men') {
+          setTimerActive(false)
+          stopAudio()
+          setStep('idle2')
+        } else {
+          onAdvance()
+        }
       } else {
-        onAdvance()
+        if (step === 'women') {
+          onBack()
+        } else if (step === 'idle') {
+          setStep('women')
+        } else if (step === 'men') {
+          setTimerActive(false)
+          stopAudio()
+          setStep('idle')
+        } else {
+          // idle2 → men (timer restarts via useEffect)
+          setStep('men')
+        }
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [step, onAdvance])
+  }, [step, onAdvance, onBack])
 
   if (!isTimerStep) {
     return <div className="screen" />

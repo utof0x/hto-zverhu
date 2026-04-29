@@ -9,9 +9,10 @@ type Step = 'intro' | 'men' | 'idle' | 'women' | 'idle2'
 
 interface Props {
   onAdvance: () => void
+  onBack: () => void
 }
 
-export default function WhoAmIChallenge({ onAdvance }: Props) {
+export default function WhoAmIChallenge({ onAdvance, onBack }: Props) {
   const [step, setStep] = useState<Step>('intro')
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
   const [timerActive, setTimerActive] = useState(false)
@@ -39,29 +40,48 @@ export default function WhoAmIChallenge({ onAdvance }: Props) {
     return () => clearTimeout(t)
   }, [timerActive, remaining, timerDone])
 
-  // Owns Space in capture phase so App.tsx doesn't also fire advance()
+  // Owns Space/ArrowRight/ArrowLeft in capture phase so App.tsx doesn't also fire
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code !== 'Space' && e.code !== 'Enter') return
+      const isForward = e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight'
+      const isBack = e.code === 'ArrowLeft'
+      if (!isForward && !isBack) return
       e.preventDefault()
       e.stopImmediatePropagation()
-      if (step === 'intro') {
-        setStep('men')
-      } else if (step === 'men') {
-        setTimerActive(false)
-        setStep('idle')
-      } else if (step === 'idle') {
-        setStep('women')
-      } else if (step === 'women') {
-        setTimerActive(false)
-        setStep('idle2')
+
+      if (isForward) {
+        if (step === 'intro') {
+          setStep('women')
+        } else if (step === 'women') {
+          setTimerActive(false)
+          setStep('idle')
+        } else if (step === 'idle') {
+          setStep('men')
+        } else if (step === 'men') {
+          setTimerActive(false)
+          setStep('idle2')
+        } else {
+          onAdvance()
+        }
       } else {
-        onAdvance()
+        if (step === 'intro') {
+          onBack()
+        } else if (step === 'women') {
+          setTimerActive(false)
+          setStep('intro')
+        } else if (step === 'idle') {
+          setStep('women')
+        } else if (step === 'men') {
+          setTimerActive(false)
+          setStep('idle')
+        } else {
+          setStep('men')
+        }
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [step, onAdvance])
+  }, [step, onAdvance, onBack])
 
   const isTeamStep = step === 'men' || step === 'women'
 

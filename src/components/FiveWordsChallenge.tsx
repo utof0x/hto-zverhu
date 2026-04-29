@@ -5,14 +5,15 @@ import { FIVE_WORDS_ROUNDS } from '../data/fiveWords'
 
 interface Props {
   onAdvance: () => void
+  onBack: () => void
 }
 
 // 'inter' = blank between rounds (Space → next women); 'blank' = final blank (Space → advance)
 type Step = 'women' | 'idle' | 'men' | 'inter' | 'blank'
 
-export default function FiveWordsChallenge({ onAdvance }: Props) {
+export default function FiveWordsChallenge({ onAdvance, onBack }: Props) {
   const [songRound, setSongRound] = useState(0)
-  const [step, setStep] = useState<Step>('women')
+  const [step, setStep] = useState<Step>('men')
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false, false, false])
   const songRef = useRef<HTMLAudioElement | null>(null)
 
@@ -46,30 +47,53 @@ export default function FiveWordsChallenge({ onAdvance }: Props) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code !== 'Space' && e.code !== 'Enter') return
-      if (isWordStep && !allRevealed) return
-      e.preventDefault()
-      e.stopImmediatePropagation()
+      const isForward = e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight'
+      const isBack = e.code === 'ArrowLeft'
+      if (!isForward && !isBack) return
 
-      stopSong()
-
-      if (step === 'women') {
-        setStep('idle')
-      } else if (step === 'idle') {
-        setStep('men')
-      } else if (step === 'men') {
-        const isLast = songRound >= FIVE_WORDS_ROUNDS.length - 1
-        if (isLast) setStep('blank')
-        else { setSongRound((r) => r + 1); setStep('inter') }
-      } else if (step === 'inter') {
-        setStep('women')
+      if (isForward) {
+        if (isWordStep && !allRevealed) return
+        e.preventDefault()
+        e.stopImmediatePropagation()
+        stopSong()
+        if (step === 'men') {
+          setStep('idle')
+        } else if (step === 'idle') {
+          setStep('women')
+        } else if (step === 'women') {
+          const isLast = songRound >= FIVE_WORDS_ROUNDS.length - 1
+          if (isLast) setStep('blank')
+          else { setSongRound((r) => r + 1); setStep('inter') }
+        } else if (step === 'inter') {
+          setStep('men')
+        } else {
+          onAdvance()
+        }
       } else {
-        onAdvance()
+        e.preventDefault()
+        e.stopImmediatePropagation()
+        stopSong()
+        if (step === 'men' && songRound === 0) {
+          onBack()
+        } else if (step === 'men') {
+          setSongRound((r) => r - 1)
+          setStep('women')
+        } else if (step === 'idle') {
+          setStep('men')
+        } else if (step === 'women') {
+          setStep('idle')
+        } else if (step === 'inter') {
+          setSongRound((r) => r - 1)
+          setStep('women')
+        } else {
+          // blank → women of last round
+          setStep('women')
+        }
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [step, songRound, isWordStep, allRevealed, onAdvance])
+  }, [step, songRound, isWordStep, allRevealed, onAdvance, onBack])
 
   function handleReveal(i: number) {
     if (revealed[i]) return
@@ -83,8 +107,11 @@ export default function FiveWordsChallenge({ onAdvance }: Props) {
 
   const teamClass = step === 'women' ? 'bonus-women' : 'bonus-men'
 
+  const counterClass = step === 'men' ? 'challenge-counter-men' : step === 'women' ? 'challenge-counter-women' : ''
+
   return (
     <div className="screen">
+      <div className={`challenge-counter ${counterClass}`}>{songRound + 1} / {FIVE_WORDS_ROUNDS.length}</div>
       <div className="five-words-grid">
         <div className="five-words-row">
           {[0, 1, 2].map((i) => (

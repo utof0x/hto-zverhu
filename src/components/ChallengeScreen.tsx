@@ -7,54 +7,61 @@ import FiveWordsChallenge from './FiveWordsChallenge'
 import RoleSwapChallenge from './RoleSwapChallenge'
 import WordAssemblyChallenge from './WordAssemblyChallenge'
 import GuessSongChallenge from './GuessSongChallenge'
+import TruthLieChallenge from './TruthLieChallenge'
 import FinalChallenge from './FinalChallenge'
 
 interface Props {
   challengeType: ChallengeType
   onAdvance: () => void
+  onBack: () => void
 }
 
-export default function ChallengeScreen({ challengeType, onAdvance }: Props) {
+export default function ChallengeScreen({ challengeType, onAdvance, onBack }: Props) {
   if (challengeType === 'who-am-i') {
-    return <WhoAmIChallenge onAdvance={onAdvance} />
+    return <WhoAmIChallenge onAdvance={onAdvance} onBack={onBack} />
   }
 
   if (challengeType === 'five-words') {
-    return <FiveWordsChallenge onAdvance={onAdvance} />
+    return <FiveWordsChallenge onAdvance={onAdvance} onBack={onBack} />
   }
 
   if (challengeType === 'role-swap') {
-    return <RoleSwapChallenge onAdvance={onAdvance} />
+    return <RoleSwapChallenge onAdvance={onAdvance} onBack={onBack} />
   }
 
   if (challengeType === 'word-assembly') {
-    return <WordAssemblyChallenge onAdvance={onAdvance} />
+    return <WordAssemblyChallenge onAdvance={onAdvance} onBack={onBack} />
+  }
+
+  if (challengeType === 'truth-lie') {
+    return <TruthLieChallenge onAdvance={onAdvance} onBack={onBack} />
   }
 
   if (challengeType === 'guess-song') {
-    return <GuessSongChallenge onAdvance={onAdvance} />
+    return <GuessSongChallenge onAdvance={onAdvance} onBack={onBack} />
   }
 
   if (challengeType === 'final') {
-    return <FinalChallenge onAdvance={onAdvance} />
+    return <FinalChallenge onAdvance={onAdvance} onBack={onBack} />
   }
 
-  return <GenericChallenge challengeType={challengeType} onAdvance={onAdvance} />
+  return <GenericChallenge challengeType={challengeType} onAdvance={onAdvance} onBack={onBack} />
 }
 
-function GenericChallenge({ challengeType, onAdvance }: Props) {
+function GenericChallenge({ challengeType, onAdvance, onBack }: Props) {
   const challenge = CHALLENGES.find((c) => c.id === challengeType)!
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code === 'Space' || e.code === 'Enter') {
+      if (e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight') {
         e.preventDefault()
         onAdvance()
       }
+      if (e.code === 'ArrowLeft') onBack()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onAdvance])
+  }, [onAdvance, onBack])
 
   return (
     <div className="screen">

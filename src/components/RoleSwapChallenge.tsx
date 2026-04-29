@@ -15,9 +15,10 @@ type Step = 'timer' | 'idle' | 'blank'
 
 interface Props {
   onAdvance: () => void
+  onBack: () => void
 }
 
-export default function RoleSwapChallenge({ onAdvance }: Props) {
+export default function RoleSwapChallenge({ onAdvance, onBack }: Props) {
   const [turnIndex, setTurnIndex] = useState(0)
   const [step, setStep] = useState<Step>('timer')
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
@@ -76,29 +77,48 @@ export default function RoleSwapChallenge({ onAdvance }: Props) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code !== 'Space' && e.code !== 'Enter') return
+      const isForward = e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight'
+      const isBack = e.code === 'ArrowLeft'
+      if (!isForward && !isBack) return
       e.preventDefault()
       e.stopImmediatePropagation()
 
-      if (step === 'timer') {
-        endTurn()
-      } else if (step === 'idle') {
-        setTurnIndex((i) => i + 1)
-        setStep('timer')
+      if (isForward) {
+        if (step === 'timer') {
+          endTurn()
+        } else if (step === 'idle') {
+          setTurnIndex((i) => i + 1)
+          setStep('timer')
+        } else {
+          onAdvance()
+        }
       } else {
-        onAdvance()
+        if (step === 'blank') {
+          setStep('timer')
+        } else if (step === 'idle') {
+          setStep('timer')
+        } else if (turnIndex === 0) {
+          onBack()
+        } else {
+          setTurnIndex((i) => i - 1)
+          setStep('idle')
+        }
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [step, turnIndex, onAdvance]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [step, turnIndex, onAdvance, onBack]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (step !== 'timer') {
     return <div className="screen" />
   }
 
+  const teamTurnIndex = team === 'men' ? turnIndex + 1 : turnIndex - MEN_TURNS + 1
+  const teamTurns = team === 'men' ? MEN_TURNS : WOMEN_TURNS
+
   return (
     <div className="screen">
+      <div className={`challenge-counter ${team === 'men' ? 'challenge-counter-men' : 'challenge-counter-women'}`}>{teamTurnIndex} / {teamTurns}</div>
       <motion.div
         className={`role-swap-timer ${teamClass}`}
         key={turnIndex}

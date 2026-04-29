@@ -84,6 +84,30 @@ export default function App() {
     }))
   }, [])
 
+  const transferAllPoints = useCallback((team: Team) => {
+    setState((prev) => {
+      const total = prev.scores.men + prev.scores.women
+      return {
+        ...prev,
+        scores: { men: team === 'men' ? total : 0, women: team === 'women' ? total : 0 },
+      }
+    })
+  }, [])
+
+  const goBack = useCallback(() => {
+    setState((prev) => {
+      const { phase, currentChallenge } = prev
+      if (phase === 'round-start') return { ...prev, phase: 'home' }
+      if (phase === 'challenge') return { ...prev, phase: 'round-start' }
+      if (phase === 'bonus') return { ...prev, phase: 'challenge' }
+      if (phase === 'round-end') {
+        if (currentChallenge === 'final') return { ...prev, phase: 'challenge' }
+        return { ...prev, phase: 'bonus' }
+      }
+      return prev
+    })
+  }, [])
+
   const handleBonusDone = useCallback(() => {
     setState((prev) => ({ ...prev, phase: 'round-end' }))
   }, [])
@@ -94,27 +118,32 @@ export default function App() {
     function onKey(e: KeyboardEvent) {
       if (e.key === '1') addPoint('men')
       if (e.key === '2') addPoint('women')
+      if (e.code === 'ArrowLeft') goBack()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [state.phase, addPoint])
+  }, [state.phase, addPoint, goBack])
 
   useEffect(() => {
     if (state.phase === 'bonus') return
 
     function onKey(e: KeyboardEvent) {
-      if (state.phase !== 'challenge' && (e.code === 'Space' || e.code === 'Enter')) {
+      if (state.phase !== 'challenge' && (e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight')) {
         e.preventDefault()
         advance()
       }
+      if (state.phase !== 'challenge' && e.code === 'ArrowLeft') {
+        goBack()
+      }
       if (state.phase === 'challenge' || state.phase === 'round-end') {
-        if (e.key === '1') addPoint('men')
-        if (e.key === '2') addPoint('women')
+        const isFinal = state.currentChallenge === 'final'
+        if (e.key === '1') isFinal ? transferAllPoints('men') : addPoint('men')
+        if (e.key === '2') isFinal ? transferAllPoints('women') : addPoint('women')
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [state.phase, advance, addPoint])
+  }, [state.phase, state.currentChallenge, advance, addPoint, transferAllPoints, goBack])
 
   const challenge = CHALLENGES.find((c) => c.id === state.currentChallenge)!
 
@@ -135,7 +164,7 @@ export default function App() {
         <RoundStartScreen round={state.currentRound} challengeName={challenge.name} />
       )}
       {state.phase === 'challenge' && (
-        <ChallengeScreen challengeType={state.currentChallenge} onAdvance={advance} />
+        <ChallengeScreen challengeType={state.currentChallenge} onAdvance={advance} onBack={goBack} />
       )}
       {state.phase === 'bonus' && state.bonusTeam && (
         <BonusScreen
@@ -150,7 +179,7 @@ export default function App() {
         <RoundEndScreen
           scores={state.scores}
           isGameEnd={state.currentRound === TOTAL_ROUNDS}
-          onAddPoint={addPoint}
+          onAddPoint={(team) => state.currentChallenge === 'final' ? transferAllPoints(team) : addPoint(team)}
         />
       )}
     </div>
