@@ -598,9 +598,10 @@ body,
   width: 100%;
   min-height: 0;
   max-height: calc((100vh - 78px) / 2 - 49px);
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 10px;
   display: block;
+  background: #ffffff;
 }
 
 .final-cell-answer {

@@ -33,4 +33,6 @@ export interface GameState {
   bonusAnswer: number; // percentage 0-100
   bonusAnswerTolerance: number; // ± percentage
   bonusQuestion: string;
+  bonusIndexMen: number;
+  bonusIndexWomen: number;
 }

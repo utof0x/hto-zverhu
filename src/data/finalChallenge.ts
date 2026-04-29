@@ -6,22 +6,22 @@ export interface FinalImage {
 }
 
 export const FINAL_IMAGES_MEN: FinalImage[] = [
-  { image: `${base}images/final/m-1.jpg`, answer: "Лол" },
-  { image: `${base}images/final/m-2.jpg`, answer: "Евер афтер хай" },
-  { image: `${base}images/final/m-3.jpg`, answer: "Барбі" },
-  { image: `${base}images/final/m-4.jpg`, answer: "Монстер хай" },
-  { image: `${base}images/final/m-5.jpg`, answer: "Бейбі борн" },
-  { image: `${base}images/final/m-6.jpg`, answer: "Брац" },
-  { image: `${base}images/final/m-7.jpg`, answer: "Міні капкейк" },
-  { image: `${base}images/final/m-8.jpg`, answer: "Лалалупсі" },
-  { image: `${base}images/final/m-9.jpg`, answer: "Блайз" },
-  { image: `${base}images/final/m-10.jpg`, answer: "Май літл поні" },
+  { image: `${base}images/final/m-1.jpg`, answer: "Меріда" },
+  { image: `${base}images/final/m-2.jpg`, answer: "Покахонтас" },
+  { image: `${base}images/final/m-3.jpg`, answer: "Мулан" },
+  { image: `${base}images/final/m-4.jpg`, answer: "Аврора" },
+  { image: `${base}images/final/m-5.jpg`, answer: "Бель" },
+  { image: `${base}images/final/m-6.jpg`, answer: "Тіана" },
+  { image: `${base}images/final/m-7.jpg`, answer: "Попелюшка" },
+  { image: `${base}images/final/m-8.jpg`, answer: "Білосніжка" },
+  { image: `${base}images/final/m-9.jpg`, answer: "Ельза" },
+  { image: `${base}images/final/m-10.jpg`, answer: "Жасмін" },
 ];
 
 export const FINAL_IMAGES_WOMEN: FinalImage[] = [
   { image: `${base}images/final/w-1.jpg`, answer: "Альфа Ромео" },
   { image: `${base}images/final/w-2.jpg`, answer: "Форд" },
-  { image: `${base}images/final/w-3.jpg`, answer: "Бетлі" },
+  { image: `${base}images/final/w-3.jpg`, answer: "Бентлі" },
   { image: `${base}images/final/w-4.jpg`, answer: "Субару" },
   { image: `${base}images/final/w-5.jpg`, answer: "Ланос" },
   { image: `${base}images/final/w-6.jpg`, answer: "Сітроєн" },

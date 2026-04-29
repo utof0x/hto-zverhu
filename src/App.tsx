@@ -9,7 +9,7 @@ import RoundEndScreen from './components/RoundEndScreen'
 import AnimatedBackground from './components/AnimatedBackground'
 import PasswordScreen from './components/PasswordScreen'
 import { CHALLENGES } from './data/challenges'
-import { BONUS_QUESTIONS_MEN, BONUS_QUESTIONS_WOMEN, pickQuestion } from './data/bonusQuestions'
+import { BONUS_QUESTIONS_MEN, BONUS_QUESTIONS_WOMEN } from './data/bonusQuestions'
 // BONUS_QUESTIONS_WOMEN kept for women bonus question selection
 import './App.css'
 
@@ -28,6 +28,8 @@ function initialState(): GameState {
     bonusAnswer: 50,
     bonusAnswerTolerance: BONUS_TOLERANCE,
     bonusQuestion: '',
+    bonusIndexMen: 0,
+    bonusIndexWomen: 0,
   }
 }
 
@@ -49,13 +51,16 @@ export default function App() {
         }
         const bonusTeam: Team = prev.roundScores.women > prev.roundScores.men ? 'women' : 'men'
         const questions = bonusTeam === 'men' ? BONUS_QUESTIONS_MEN : BONUS_QUESTIONS_WOMEN
-        const { question } = pickQuestion(questions, [])
+        const idx = bonusTeam === 'men' ? prev.bonusIndexMen : prev.bonusIndexWomen
+        const question = questions[idx % questions.length]
         return {
           ...prev,
           phase: 'bonus',
           bonusTeam,
-          bonusAnswer: Math.round(15 + Math.random() * 70),
+          bonusAnswer: question.answer ?? Math.round(15 + Math.random() * 70),
           bonusQuestion: question.question,
+          bonusIndexMen: bonusTeam === 'men' ? prev.bonusIndexMen + 1 : prev.bonusIndexMen,
+          bonusIndexWomen: bonusTeam === 'women' ? prev.bonusIndexWomen + 1 : prev.bonusIndexWomen,
           roundScores: { men: 0, women: 0 },
         }
       }
