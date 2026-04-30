@@ -3,15 +3,14 @@ import { motion } from 'framer-motion'
 import wrongSrc from '../assets/wrong.mp3'
 
 const TIMER_SECONDS = 30
-const MEN_TURNS = 5
 const WOMEN_TURNS = 5
-const TOTAL_TURNS = MEN_TURNS + WOMEN_TURNS // 0-4 = men, 5-9 = women
 
 const base = import.meta.env.BASE_URL
-const roleMSrc = `${base}audio/role-swap-m.mp3`
 const roleWSrc = `${base}audio/role-swap-w.mp3`
+const videoSrc = `${base}m-role-swap.MP4`
 
-type Step = 'timer' | 'idle' | 'blank'
+// men-video → men-idle → women-timer(0) → idle → women-timer(1) → ... → blank
+type Step = 'men-video' | 'men-idle' | 'women-timer' | 'idle' | 'blank'
 
 interface Props {
   onAdvance: () => void
@@ -19,15 +18,13 @@ interface Props {
 }
 
 export default function RoleSwapChallenge({ onAdvance, onBack }: Props) {
-  const [turnIndex, setTurnIndex] = useState(0)
-  const [step, setStep] = useState<Step>('timer')
+  const [step, setStep] = useState<Step>('men-video')
+  const [turnIndex, setTurnIndex] = useState(0) // 0-4 for women's turns
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
-  const [timerActive, setTimerActive] = useState(true)
+  const [timerActive, setTimerActive] = useState(false)
   const [timerDone, setTimerDone] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-
-  const team = turnIndex < MEN_TURNS ? 'men' : 'women'
-  const teamClass = team === 'men' ? 'bonus-men' : 'bonus-women'
+  const videoRef = useRef<HTMLVideoElement | null>(null)
 
   function stopAudio() {
     if (audioRef.current) {
@@ -37,23 +34,29 @@ export default function RoleSwapChallenge({ onAdvance, onBack }: Props) {
     }
   }
 
+  function replayVideo() {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0
+      videoRef.current.play().catch(() => {})
+    }
+  }
+
   function endTurn() {
     setTimerActive(false)
     stopAudio()
-    if (turnIndex >= TOTAL_TURNS - 1) setStep('blank')
+    if (turnIndex >= WOMEN_TURNS - 1) setStep('blank')
     else setStep('idle')
   }
 
-  // Reset timer and start music when entering a new timer step
+  // Start women's audio and timer when entering women-timer step
   useEffect(() => {
-    if (step !== 'timer') return
+    if (step !== 'women-timer') return
     setRemaining(TIMER_SECONDS)
     setTimerDone(false)
     setTimerActive(true)
 
     stopAudio()
-    const src = turnIndex < MEN_TURNS ? roleMSrc : roleWSrc
-    const audio = new Audio(src)
+    const audio = new Audio(roleWSrc)
     audio.loop = true
     audioRef.current = audio
     audio.play().catch(() => {})
@@ -84,50 +87,56 @@ export default function RoleSwapChallenge({ onAdvance, onBack }: Props) {
       e.stopImmediatePropagation()
 
       if (isForward) {
-        if (step === 'timer') {
-          endTurn()
-        } else if (step === 'idle') {
-          setTurnIndex((i) => i + 1)
-          setStep('timer')
-        } else {
-          onAdvance()
-        }
+        if (step === 'men-video') setStep('men-idle')
+        else if (step === 'men-idle') { setTurnIndex(0); setStep('women-timer') }
+        else if (step === 'women-timer') endTurn()
+        else if (step === 'idle') { setTurnIndex((i) => i + 1); setStep('women-timer') }
+        else onAdvance()
       } else {
-        if (step === 'blank') {
-          setStep('timer')
-        } else if (step === 'idle') {
-          setStep('timer')
-        } else if (turnIndex === 0) {
-          onBack()
-        } else {
-          setTurnIndex((i) => i - 1)
-          setStep('idle')
-        }
+        if (step === 'men-video') onBack()
+        else if (step === 'men-idle') setStep('men-video')
+        else if (step === 'women-timer' && turnIndex === 0) setStep('men-idle')
+        else if (step === 'women-timer') { setTurnIndex((i) => i - 1); setStep('idle') }
+        else if (step === 'idle') { stopAudio(); setStep('women-timer') }
+        else setStep('women-timer') // blank → last women-timer
       }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
   }, [step, turnIndex, onAdvance, onBack]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (step !== 'timer') {
-    return <div className="screen" />
+  if (step === 'men-video') {
+    return (
+      <div className="screen">
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          className="final-video"
+          autoPlay
+          playsInline
+          key="men-video"
+        />
+        <button className="final-video-reload" onClick={replayVideo}>↺</button>
+      </div>
+    )
   }
 
-  const teamTurnIndex = team === 'men' ? turnIndex + 1 : turnIndex - MEN_TURNS + 1
-  const teamTurns = team === 'men' ? MEN_TURNS : WOMEN_TURNS
+  if (step === 'women-timer') {
+    return (
+      <div className="screen">
+        <div className="challenge-counter challenge-counter-women">{turnIndex + 1} / {WOMEN_TURNS}</div>
+        <motion.div
+          className="role-swap-timer bonus-women"
+          key={turnIndex}
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', bounce: 0.4, duration: 0.5 }}
+        >
+          {remaining}
+        </motion.div>
+      </div>
+    )
+  }
 
-  return (
-    <div className="screen">
-      <div className={`challenge-counter ${team === 'men' ? 'challenge-counter-men' : 'challenge-counter-women'}`}>{teamTurnIndex} / {teamTurns}</div>
-      <motion.div
-        className={`role-swap-timer ${teamClass}`}
-        key={turnIndex}
-        initial={{ scale: 0.7, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: 'spring', bounce: 0.4, duration: 0.5 }}
-      >
-        {remaining}
-      </motion.div>
-    </div>
-  )
+  return <div className="screen" />
 }

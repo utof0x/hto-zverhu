@@ -97,7 +97,6 @@ export default function FinalChallenge({ onAdvance, onBack }: Props) {
           stopAudio()
           setStep('idle')
         } else {
-          // blank → women (timer+audio restart via useEffect)
           setStep('women')
         }
       }
@@ -116,7 +115,6 @@ export default function FinalChallenge({ onAdvance, onBack }: Props) {
 
   return (
     <div className="screen">
-      {/* Timer */}
       <div className="final-timer-wrap">
         <motion.div
           className={`timer-counter ${teamClass}`}
@@ -129,7 +127,6 @@ export default function FinalChallenge({ onAdvance, onBack }: Props) {
         </motion.div>
       </div>
 
-      {/* Image grid */}
       <div className="final-grid">
         {images.map((item, i) => (
           <div key={i} className="final-cell">

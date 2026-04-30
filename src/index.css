@@ -556,6 +556,40 @@ body,
   cursor: default;
 }
 
+/* ── Final challenge video (men step) ─────────────── */
+.final-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.final-video-reload {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 2;
+  font-size: 22px;
+  background: rgba(0 0 0 / 0.45);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.final-video-reload:hover {
+  background: rgba(0 0 0 / 0.7);
+}
+
 /* ── Final challenge ───────────────────────────────── */
 .final-timer-wrap {
   position: absolute;
