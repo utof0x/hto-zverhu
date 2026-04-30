@@ -89,6 +89,13 @@ export default function App() {
     }))
   }, [])
 
+  const removePoint = useCallback((team: Team) => {
+    setState((prev) => ({
+      ...prev,
+      scores: { ...prev.scores, [team]: Math.max(0, prev.scores[team] - 10) },
+    }))
+  }, [])
+
   const transferAllPoints = useCallback((team: Team) => {
     setState((prev) => {
       const total = prev.scores.men + prev.scores.women
@@ -123,11 +130,13 @@ export default function App() {
     function onKey(e: KeyboardEvent) {
       if (e.key === '1') addPoint('men')
       if (e.key === '2') addPoint('women')
+      if (e.key === '9') removePoint('men')
+      if (e.key === '0') removePoint('women')
       if (e.code === 'ArrowLeft') goBack()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [state.phase, addPoint, goBack])
+  }, [state.phase, addPoint, removePoint, goBack])
 
   useEffect(() => {
     if (state.phase === 'bonus') return
@@ -145,10 +154,12 @@ export default function App() {
         if (e.key === '1') isFinal ? transferAllPoints('men') : addPoint('men')
         if (e.key === '2') isFinal ? transferAllPoints('women') : addPoint('women')
       }
+      if (e.key === '9') removePoint('men')
+      if (e.key === '0') removePoint('women')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [state.phase, state.currentChallenge, advance, addPoint, transferAllPoints, goBack])
+  }, [state.phase, state.currentChallenge, advance, addPoint, removePoint, transferAllPoints, goBack])
 
   const challenge = CHALLENGES.find((c) => c.id === state.currentChallenge)!
 

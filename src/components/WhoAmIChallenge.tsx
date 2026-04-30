@@ -51,13 +51,13 @@ export default function WhoAmIChallenge({ onAdvance, onBack }: Props) {
 
       if (isForward) {
         if (step === 'intro') {
-          setStep('women')
-        } else if (step === 'women') {
+          setStep('men')
+        } else if (step === 'men') {
           setTimerActive(false)
           setStep('idle')
         } else if (step === 'idle') {
-          setStep('men')
-        } else if (step === 'men') {
+          setStep('women')
+        } else if (step === 'women') {
           setTimerActive(false)
           setStep('idle2')
         } else {
@@ -66,16 +66,16 @@ export default function WhoAmIChallenge({ onAdvance, onBack }: Props) {
       } else {
         if (step === 'intro') {
           onBack()
-        } else if (step === 'women') {
+        } else if (step === 'men') {
           setTimerActive(false)
           setStep('intro')
         } else if (step === 'idle') {
-          setStep('women')
-        } else if (step === 'men') {
+          setStep('men')
+        } else if (step === 'women') {
           setTimerActive(false)
           setStep('idle')
         } else {
-          setStep('men')
+          setStep('women')
         }
       }
     }
