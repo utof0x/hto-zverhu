@@ -13,7 +13,7 @@ type Step = 'women' | 'idle' | 'men' | 'inter' | 'blank'
 
 export default function FiveWordsChallenge({ onAdvance, onBack }: Props) {
   const [songRound, setSongRound] = useState(0)
-  const [step, setStep] = useState<Step>('men')
+  const [step, setStep] = useState<Step>('women')
   const [revealed, setRevealed] = useState<boolean[]>([false, false, false, false, false])
   const songRef = useRef<HTMLAudioElement | null>(null)
 
@@ -56,16 +56,16 @@ export default function FiveWordsChallenge({ onAdvance, onBack }: Props) {
         e.preventDefault()
         e.stopImmediatePropagation()
         stopSong()
-        if (step === 'men') {
+        if (step === 'women') {
           setStep('idle')
         } else if (step === 'idle') {
-          setStep('women')
-        } else if (step === 'women') {
+          setStep('men')
+        } else if (step === 'men') {
           const isLast = songRound >= FIVE_WORDS_ROUNDS.length - 1
           if (isLast) setStep('blank')
           else { setSongRound((r) => r + 1); setStep('inter') }
         } else if (step === 'inter') {
-          setStep('men')
+          setStep('women')
         } else {
           onAdvance()
         }
@@ -73,21 +73,21 @@ export default function FiveWordsChallenge({ onAdvance, onBack }: Props) {
         e.preventDefault()
         e.stopImmediatePropagation()
         stopSong()
-        if (step === 'men' && songRound === 0) {
+        if (step === 'women' && songRound === 0) {
           onBack()
-        } else if (step === 'men') {
-          setSongRound((r) => r - 1)
-          setStep('women')
-        } else if (step === 'idle') {
-          setStep('men')
         } else if (step === 'women') {
+          setSongRound((r) => r - 1)
+          setStep('men')
+        } else if (step === 'idle') {
+          setStep('women')
+        } else if (step === 'men') {
           setStep('idle')
         } else if (step === 'inter') {
           setSongRound((r) => r - 1)
-          setStep('women')
+          setStep('men')
         } else {
-          // blank → women of last round
-          setStep('women')
+          // blank → men of last round
+          setStep('men')
         }
       }
     }

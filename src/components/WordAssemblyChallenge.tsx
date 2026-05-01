@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function WordAssemblyChallenge({ onAdvance, onBack }: Props) {
-  const [step, setStep] = useState<Step>('men')
+  const [step, setStep] = useState<Step>('women')
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
   const [timerActive, setTimerActive] = useState(true)
   const [timerDone, setTimerDone] = useState(false)
@@ -68,13 +68,13 @@ export default function WordAssemblyChallenge({ onAdvance, onBack }: Props) {
       e.stopImmediatePropagation()
 
       if (isForward) {
-        if (step === 'men') {
+        if (step === 'women') {
           setTimerActive(false)
           stopAudio()
           setStep('idle')
         } else if (step === 'idle') {
-          setStep('women')
-        } else if (step === 'women') {
+          setStep('men')
+        } else if (step === 'men') {
           setTimerActive(false)
           stopAudio()
           setStep('idle2')
@@ -82,17 +82,17 @@ export default function WordAssemblyChallenge({ onAdvance, onBack }: Props) {
           onAdvance()
         }
       } else {
-        if (step === 'men') {
+        if (step === 'women') {
           onBack()
         } else if (step === 'idle') {
-          setStep('men')
-        } else if (step === 'women') {
+          setStep('women')
+        } else if (step === 'men') {
           setTimerActive(false)
           stopAudio()
           setStep('idle')
         } else {
-          // idle2 → women (timer restarts via useEffect)
-          setStep('women')
+          // idle2 → men (timer restarts via useEffect)
+          setStep('men')
         }
       }
     }
@@ -104,7 +104,7 @@ export default function WordAssemblyChallenge({ onAdvance, onBack }: Props) {
     return <div className="screen" />
   }
 
-  const teamClass = step === 'men' ? 'bonus-men' : 'bonus-women'
+  const teamClass = step === 'women' ? 'bonus-women' : 'bonus-men'
 
   return (
     <div className="screen">

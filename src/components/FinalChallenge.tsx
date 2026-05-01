@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function FinalChallenge({ onAdvance, onBack }: Props) {
-  const [step, setStep] = useState<Step>('men')
+  const [step, setStep] = useState<Step>('women')
   const [remaining, setRemaining] = useState(TIMER_SECONDS)
   const [timerActive, setTimerActive] = useState(true)
   const [timerDone, setTimerDone] = useState(false)
@@ -23,8 +23,8 @@ export default function FinalChallenge({ onAdvance, onBack }: Props) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const isTimerStep = step === 'men' || step === 'women'
-  const images = step === 'men' ? FINAL_IMAGES_MEN : FINAL_IMAGES_WOMEN
-  const teamClass = step === 'men' ? 'bonus-men' : 'bonus-women'
+  const images = step === 'women' ? FINAL_IMAGES_WOMEN : FINAL_IMAGES_MEN
+  const teamClass = step === 'women' ? 'bonus-women' : 'bonus-men'
 
   function stopAudio() {
     if (audioRef.current) {
@@ -74,13 +74,13 @@ export default function FinalChallenge({ onAdvance, onBack }: Props) {
       e.stopImmediatePropagation()
 
       if (isForward) {
-        if (step === 'men') {
+        if (step === 'women') {
           setTimerActive(false)
           stopAudio()
           setStep('idle')
         } else if (step === 'idle') {
-          setStep('women')
-        } else if (step === 'women') {
+          setStep('men')
+        } else if (step === 'men') {
           setTimerActive(false)
           stopAudio()
           setStep('blank')
@@ -88,16 +88,16 @@ export default function FinalChallenge({ onAdvance, onBack }: Props) {
           onAdvance()
         }
       } else {
-        if (step === 'men') {
+        if (step === 'women') {
           onBack()
         } else if (step === 'idle') {
-          setStep('men')
-        } else if (step === 'women') {
+          setStep('women')
+        } else if (step === 'men') {
           setTimerActive(false)
           stopAudio()
           setStep('idle')
         } else {
-          setStep('women')
+          setStep('men')
         }
       }
     }
