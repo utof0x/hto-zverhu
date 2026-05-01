@@ -568,8 +568,11 @@ body,
 
 .final-video-reload {
   position: absolute;
-  top: 16px;
-  right: 20px;
+  /* bottom: 32px;
+  left: 50%; */
+  top: 20%;
+  right: 15%;
+  transform: translateX(-50%);
   z-index: 2;
   font-size: 22px;
   background: rgba(0 0 0 / 0.45);
