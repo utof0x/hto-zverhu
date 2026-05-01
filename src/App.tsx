@@ -7,7 +7,6 @@ import ChallengeScreen from './components/ChallengeScreen'
 import BonusScreen from './components/BonusScreen'
 import RoundEndScreen from './components/RoundEndScreen'
 import AnimatedBackground from './components/AnimatedBackground'
-import PasswordScreen from './components/PasswordScreen'
 import { CHALLENGES } from './data/challenges'
 import { BONUS_QUESTIONS_MEN, BONUS_QUESTIONS_WOMEN } from './data/bonusQuestions'
 // BONUS_QUESTIONS_WOMEN kept for women bonus question selection
@@ -34,7 +33,6 @@ function initialState(): GameState {
 }
 
 export default function App() {
-  const [unlocked, setUnlocked] = useState(false)
   const [state, setState] = useState<GameState>(initialState)
 
   const advance = useCallback(() => {
@@ -162,15 +160,6 @@ export default function App() {
   }, [state.phase, state.currentChallenge, advance, addPoint, removePoint, transferAllPoints, goBack])
 
   const challenge = CHALLENGES.find((c) => c.id === state.currentChallenge)!
-
-  if (!unlocked) {
-    return (
-      <div className="app">
-        <AnimatedBackground />
-        <PasswordScreen onUnlock={() => setUnlocked(true)} />
-      </div>
-    )
-  }
 
   return (
     <div className="app">
